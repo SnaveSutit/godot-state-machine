@@ -20,11 +20,19 @@ func update_selected_state_visibility(selection: Array[Node]) -> void:
 	var first_node := selection[0]
 
 	# Only show children of the selected [AbstractState].
-	var state := AbstractState.get_nearest_abstract_state(first_node)
-	if state:
-		if state.state_machine:
-			for child in state.state_machine.get_states():
-				child.visible = child == state
+	var selected_state := AbstractState.get_nearest_abstract_state(first_node)
+
+	var machine := selected_state.get_master_state_machine()
+	var queue: Array[AbstractState] = [machine]
+	while queue.size() > 0:
+		var state := queue.pop_front()
+		if state is StateMachine:
+			for child in state.get_states():
+				child.visible = child == selected_state
+				if child is AbstractState:
+					queue.push_back(child)
+		else:
+			state.visible = state == selected_state
 
 
 func _on_selection_changed() -> void:

@@ -24,6 +24,13 @@ static func get_nearest_abstract_state(node: Node) -> AbstractState:
 	return null
 
 
+## Returns the master (root) [StateMachine] of this [AbstractState].
+func get_master_state_machine() -> StateMachine:
+	if state_machine is StateMachine:
+		return state_machine.get_master_state_machine()
+	return state_machine
+
+
 func _enter_tree() -> void:
 	var parent := get_parent()
 	if parent is StateMachine:
